@@ -13,7 +13,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.storage.ItemDaoInMemoryImpl;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.storage.UserDaoInMemoryImpl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

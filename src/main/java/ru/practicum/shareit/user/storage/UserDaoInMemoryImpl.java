@@ -79,4 +79,10 @@ public class UserDaoInMemoryImpl implements UserDao {
             throw new EmailConflictException("data validation error. email:" + email + " already in use");
         }
     }
+
+    public void clearDataForTesting() {
+        idGenerator = 0;
+        users.clear();
+        emails.clear();
+    }
 }

@@ -92,4 +92,9 @@ public class ItemDaoInMemoryImpl implements ItemDao {
             throw new ObjectNotFoundException("item with id:" + itemId + " not found error");
         }
     }
+
+    public void clearDataForTesting() {
+        idGenerator = 0;
+        items.clear();
+    }
 }

@@ -16,30 +16,29 @@ import java.util.List;
 @RequestMapping(path = "/users")
 @RequiredArgsConstructor
 public class UserController {
-    private final UserMapper mapper;
     private final UserService userService;
 
     @PostMapping
     public UserDto create(@Valid @RequestBody UserDto userDto) {
-        User user = mapper.toUserModel(userDto);
-        return mapper.toUserDto(userService.create(user));
+        User user = UserMapper.toUserModel(userDto);
+        return UserMapper.toUserDto(userService.create(user));
     }
 
     @GetMapping("/{userId}")
     public UserDto findById(@NotNull @Min(1) @PathVariable Long userId) {
-        return mapper.toUserDto(userService.findById(userId));
+        return UserMapper.toUserDto(userService.findById(userId));
     }
 
     @GetMapping
     public List<UserDto> getAll() {
-        return mapper.toUserDtoList(userService.getAll());
+        return UserMapper.toUserDtoList(userService.getAll());
     }
 
     @PatchMapping("/{userId}")
     public UserDto update(@NotNull @Min(1) @PathVariable Long userId,
                           @RequestBody UserDto userDto) {
-        User user = mapper.toUserModel(userDto);
-        return mapper.toUserDto(userService.update(userId, user));
+        User user = UserMapper.toUserModel(userDto);
+        return UserMapper.toUserDto(userService.update(userId, user));
     }
 
     @DeleteMapping("/{userId}")

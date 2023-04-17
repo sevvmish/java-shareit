@@ -9,15 +9,15 @@ import java.util.List;
 
 @Service
 public class UserMapper {
-    public UserDto toUserDto(User user) {
+    public static UserDto toUserDto(User user) {
         return new UserDto(user.getId(), user.getName(), user.getEmail());
     }
 
-    public User toUserModel(UserDto userDto) {
+    public static User toUserModel(UserDto userDto) {
         return new User(userDto.getId(), userDto.getName(), userDto.getEmail());
     }
 
-    public List<UserDto> toUserDtoList(List<User> users) {
+    public static List<UserDto> toUserDtoList(List<User> users) {
         List<UserDto> result = new ArrayList<>();
         for (User user : users) {
             result.add(toUserDto(user));

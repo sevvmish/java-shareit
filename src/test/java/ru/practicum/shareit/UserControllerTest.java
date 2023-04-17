@@ -1,6 +1,7 @@
 package ru.practicum.shareit;
 
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,24 +13,30 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.annotation.DirtiesContext;
 import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.user.storage.UserDaoInMemoryImpl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestDatabase
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class UserControllerTest {
     @Autowired
     private TestRestTemplate restTemplate;
+    @Autowired
+    private final UserDaoInMemoryImpl userStorage;
     private ResponseEntity<User> response;
     private User user1;
 
     @BeforeEach
     public void beforeEach() {
         user1 = new User(null, "ivanov", "ivanov@gmail.com");
+    }
+
+    @AfterEach
+    public void afterEach() {
+        userStorage.clearDataForTesting();
     }
 
     @Test

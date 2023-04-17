@@ -1,6 +1,7 @@
 package ru.practicum.shareit;
 
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,23 +10,25 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
-import org.springframework.test.annotation.DirtiesContext;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.storage.ItemDaoInMemoryImpl;
 import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.user.storage.UserDaoInMemoryImpl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestDatabase
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class ItemControllerTest {
     @Autowired
     private TestRestTemplate restTemplate;
     @Autowired
-    private TestRestTemplate userRestTemplate;
+    private final UserDaoInMemoryImpl userStorage;
+    @Autowired
     private final ItemDaoInMemoryImpl itemStorage;
+    @Autowired
+    private TestRestTemplate userRestTemplate;
     private ResponseEntity<Item> response;
     private Item item1;
     private Item item2;
@@ -41,6 +44,12 @@ public class ItemControllerTest {
         user1 = userRestTemplate.postForEntity("/users", user1, User.class).getBody();
         user2 = new User(null, "petrov", "petrov@gmail.com");
         user2 = userRestTemplate.postForEntity("/users", user2, User.class).getBody();
+    }
+
+    @AfterEach
+    public void afterEach() {
+        userStorage.clearDataForTesting();
+        itemStorage.clearDataForTesting();
     }
 
     @Test

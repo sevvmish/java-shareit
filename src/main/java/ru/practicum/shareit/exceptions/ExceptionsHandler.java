@@ -55,4 +55,13 @@ public class ExceptionsHandler {
                 String.format(e.getMessage())
         );
     }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse badRequestException(final BadRequestException e) {
+        log.error(e.getMessage());
+        return new ErrorResponse(
+                String.format(e.getMessage())
+        );
+    }
 }

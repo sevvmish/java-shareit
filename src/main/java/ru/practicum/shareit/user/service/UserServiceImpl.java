@@ -10,7 +10,6 @@ import ru.practicum.shareit.user.model.UserDto;
 import ru.practicum.shareit.user.storage.UserRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -46,7 +45,6 @@ public class UserServiceImpl implements UserService {
     public User findById(long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ObjectNotFoundException("user with id:" + userId + " not found error"));
-
         return user;
     }
 

@@ -17,6 +17,7 @@ public class BookingBriefDto {
     @NotNull
     @Future
     private LocalDateTime end;
+
     private Long itemId;
     private Long bookerId;
 }

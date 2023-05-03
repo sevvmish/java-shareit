@@ -86,7 +86,7 @@ public class BookingServiceImpl implements BookingService {
         List<Booking> bookingsList = new ArrayList<>();
         switch (state) {
             case "ALL":
-                bookingsList.addAll(bookingRepository.findAllByItemOwner(user,sort));
+                bookingsList.addAll(bookingRepository.findAllByItemOwner(user, sort));
                 break;
 
             case "FUTURE":
@@ -127,7 +127,7 @@ public class BookingServiceImpl implements BookingService {
         List<Booking> bookingDtoList = new ArrayList<>();
         switch (state) {
             case "ALL":
-                bookingDtoList.addAll(bookingRepository.findAllByBooker(user,sort));
+                bookingDtoList.addAll(bookingRepository.findAllByBooker(user, sort));
                 break;
 
             case "REJECTED":

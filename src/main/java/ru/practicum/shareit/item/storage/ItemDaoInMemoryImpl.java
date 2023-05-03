@@ -59,7 +59,7 @@ public class ItemDaoInMemoryImpl implements ItemDao {
         List<Item> result = new ArrayList<>();
 
         for (Item item : items.values()) {
-            if (item.getOwner().equals(userId)) {
+            if (item.getOwner().getId().equals(userId)) {
                 result.add(item);
             }
         }

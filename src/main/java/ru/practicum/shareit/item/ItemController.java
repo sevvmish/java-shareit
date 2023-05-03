@@ -18,29 +18,29 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ItemController {
     private final ItemService itemService;
-    private final String USER_ID = "X-Sharer-User-Id";
+    private final String userHeaderId = "X-Sharer-User-Id";
 
     @PostMapping
     public ItemDto create(@Valid @RequestBody ItemDto itemDto,
-                          @NotNull @Min(1) @RequestHeader(USER_ID) Long userId) {
+                          @NotNull @Min(1) @RequestHeader(userHeaderId) Long userId) {
         return itemService.create(itemDto, userId);
     }
 
     @PatchMapping("/{itemId}")
     public ItemDto update(@RequestBody ItemDto itemDto,
                           @NotNull @Min(1) @PathVariable Long itemId,
-                          @NotNull @Min(1) @RequestHeader(USER_ID) Long userId) {
+                          @NotNull @Min(1) @RequestHeader(userHeaderId) Long userId) {
         return itemService.update(itemDto, itemId, userId);
     }
 
     @GetMapping("/{itemId}")
     public ItemDto findById(@NotNull @Min(1) @PathVariable Long itemId,
-                            @NotNull @Min(1) @RequestHeader(USER_ID) Long userId) {
+                            @NotNull @Min(1) @RequestHeader(userHeaderId) Long userId) {
         return itemService.findById(itemId, userId);
     }
 
     @GetMapping
-    public List<ItemDto> getAllByUserId(@NotNull @Min(1) @RequestHeader(USER_ID) Long userId) {
+    public List<ItemDto> getAllByUserId(@NotNull @Min(1) @RequestHeader(userHeaderId) Long userId) {
         return itemService.getAllByUserId(userId);
     }
 
@@ -51,7 +51,7 @@ public class ItemController {
     }
 
     @PostMapping("/{itemId}/comment")
-    public CommentDto createComment(@PathVariable Long itemId, @RequestHeader(USER_ID) Long userId,
+    public CommentDto createComment(@PathVariable Long itemId, @RequestHeader(userHeaderId) Long userId,
                                     @Valid @RequestBody CommentDto commentDto) {
         return itemService.createComment(itemId, userId, commentDto);
     }

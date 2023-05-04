@@ -44,7 +44,7 @@ public class BookingServiceImpl implements BookingService {
         if (!item.getAvailable()) {
             throw new BadRequestException("item:" + item.getId() + " is not available");
         }
-        Booking booking = BookingMapper.toBookingModel(bookingBriefDto);
+        Booking booking = BookingMapper.toBooking(bookingBriefDto);
         if (booking.getEnd().isBefore(booking.getStart()) || booking.getEnd().isEqual(booking.getStart())) {
             throw new BadRequestException("wrong booking start and end periods");
         }
@@ -80,34 +80,34 @@ public class BookingServiceImpl implements BookingService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<BookingDto> getAllByOwner(Long userId, String state) {
+    public List<BookingDto> getAllByOwner(Long userId, BookingState state) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ObjectNotFoundException("user with id:" + userId + " not found error"));
         List<Booking> bookingsList = new ArrayList<>();
         switch (state) {
-            case "ALL":
+            case ALL:
                 bookingsList.addAll(bookingRepository.findAllByItemOwner(user, sort));
                 break;
 
-            case "FUTURE":
+            case FUTURE:
                 bookingsList.addAll(bookingRepository.findAllByItemOwnerAndStartAfter(user, LocalDateTime.now(), sort));
                 break;
 
-            case "CURRENT":
+            case CURRENT:
                 bookingsList.addAll(bookingRepository.findAllByItemOwnerAndStartBeforeAndEndAfter(user,
                         LocalDateTime.now(), LocalDateTime.now(), sort));
                 break;
 
-            case "PAST":
+            case PAST:
                 bookingsList.addAll(bookingRepository.findAllByItemOwnerAndEndBefore(user,
                         LocalDateTime.now(), sort));
                 break;
 
-            case "WAITING":
+            case WAITING:
                 bookingsList.addAll(bookingRepository.findAllByItemOwnerAndStatusEquals(user, BookingStatus.WAITING, sort));
                 break;
 
-            case "REJECTED":
+            case REJECTED:
                 bookingsList.addAll(bookingRepository.findAllByItemOwnerAndStatusEquals(user, BookingStatus.REJECTED, sort));
                 break;
 
@@ -120,35 +120,35 @@ public class BookingServiceImpl implements BookingService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<BookingDto> getAllByUser(Long userId, String state) {
+    public List<BookingDto> getAllByUser(Long userId, BookingState state) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ObjectNotFoundException("Невозможно найти бронирования - " +
                         "не найден пользователь с id " + userId));
         List<Booking> bookingDtoList = new ArrayList<>();
         switch (state) {
-            case "ALL":
+            case ALL:
                 bookingDtoList.addAll(bookingRepository.findAllByBooker(user, sort));
                 break;
 
-            case "REJECTED":
+            case REJECTED:
                 bookingDtoList.addAll(bookingRepository.findAllByBookerAndStatusEquals(user, BookingStatus.REJECTED, sort));
                 break;
 
-            case "CURRENT":
+            case CURRENT:
                 bookingDtoList.addAll(bookingRepository.findAllByBookerAndStartBeforeAndEndAfter(user,
                         LocalDateTime.now(), LocalDateTime.now(), sort));
                 break;
 
-            case "PAST":
+            case PAST:
                 bookingDtoList.addAll(bookingRepository.findAllByBookerAndEndBefore(user,
                         LocalDateTime.now(), sort));
                 break;
 
-            case "WAITING":
+            case WAITING:
                 bookingDtoList.addAll(bookingRepository.findAllByBookerAndStatusEquals(user, BookingStatus.WAITING, sort));
                 break;
 
-            case "FUTURE":
+            case FUTURE:
                 bookingDtoList.addAll(bookingRepository.findAllByBookerAndStartAfter(user, LocalDateTime.now(), sort));
                 break;
 

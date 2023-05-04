@@ -26,7 +26,7 @@ public class BookingMapper {
         return result;
     }
 
-    public static Booking toBookingModel(BookingDto bookingDto) {
+    public static Booking toBooking(BookingDto bookingDto) {
         Booking result = new Booking();
         result.setId(bookingDto.getId());
         result.setStart(bookingDto.getStart());
@@ -37,7 +37,7 @@ public class BookingMapper {
         return result;
     }
 
-    public static Booking toBookingModel(BookingBriefDto bookingBriefDto) {
+    public static Booking toBooking(BookingBriefDto bookingBriefDto) {
         Booking result = new Booking();
         result.setStart(bookingBriefDto.getStart());
         result.setEnd(bookingBriefDto.getEnd());

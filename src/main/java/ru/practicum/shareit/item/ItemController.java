@@ -9,7 +9,6 @@ import ru.practicum.shareit.item.service.ItemMapper;
 import ru.practicum.shareit.item.service.ItemService;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -22,25 +21,25 @@ public class ItemController {
 
     @PostMapping
     public ItemDto create(@Valid @RequestBody ItemDto itemDto,
-                          @NotNull @Min(1) @RequestHeader(userHeaderId) Long userId) {
+                          @NotNull @RequestHeader(userHeaderId) Long userId) {
         return itemService.create(itemDto, userId);
     }
 
     @PatchMapping("/{itemId}")
     public ItemDto update(@RequestBody ItemDto itemDto,
-                          @NotNull @Min(1) @PathVariable Long itemId,
-                          @NotNull @Min(1) @RequestHeader(userHeaderId) Long userId) {
+                          @NotNull @PathVariable Long itemId,
+                          @NotNull @RequestHeader(userHeaderId) Long userId) {
         return itemService.update(itemDto, itemId, userId);
     }
 
     @GetMapping("/{itemId}")
-    public ItemDto findById(@NotNull @Min(1) @PathVariable Long itemId,
-                            @NotNull @Min(1) @RequestHeader(userHeaderId) Long userId) {
+    public ItemDto findById(@NotNull @PathVariable Long itemId,
+                            @NotNull @RequestHeader(userHeaderId) Long userId) {
         return itemService.findById(itemId, userId);
     }
 
     @GetMapping
-    public List<ItemDto> getAllByUserId(@NotNull @Min(1) @RequestHeader(userHeaderId) Long userId) {
+    public List<ItemDto> getAllByUserId(@NotNull @RequestHeader(userHeaderId) Long userId) {
         return itemService.getAllByUserId(userId);
     }
 

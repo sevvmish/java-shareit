@@ -33,8 +33,10 @@ public class ExceptionsHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse runtimeException(final RuntimeException e) {
         log.error(e.getMessage());
+        if (e.getMessage().contains("UNSUPPORTED_STATUS"))
+            return new ErrorResponse("Unknown state: UNSUPPORTED_STATUS");
         return new ErrorResponse(
-                String.format(e.getMessage())
+                String.format(e.getMessage() + "2222")
         );
     }
 

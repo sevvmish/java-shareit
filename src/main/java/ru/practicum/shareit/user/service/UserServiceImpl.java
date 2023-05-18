@@ -3,8 +3,11 @@ package ru.practicum.shareit.user.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.exceptions.ObjectNotFoundException;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.storage.UserDao;
+import ru.practicum.shareit.user.model.UserDto;
+import ru.practicum.shareit.user.storage.UserRepository;
 
 import java.util.List;
 
@@ -12,30 +15,48 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    private final UserDao userStorage;
+    private final UserRepository userRepository;
 
+    @Transactional
     @Override
     public User create(User user) {
-        return userStorage.create(user);
+        return userRepository.save(user);
     }
 
+    @Transactional
     @Override
-    public User update(long userId, User user) {
-        return userStorage.update(userId, user);
+    public User update(long userId, UserDto userDto) {
+        User previousUser = userRepository.findById(userId)
+                .orElseThrow(() -> new ObjectNotFoundException("user with id:" + userId + " not found error"));
+
+        if (userDto.getName() != null) {
+            previousUser.setName(userDto.getName());
+        }
+
+        if (userDto.getEmail() != null && !userDto.getEmail().equals(previousUser.getEmail())) {
+            previousUser.setEmail(userDto.getEmail());
+        }
+
+        return previousUser;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public User findById(long userId) {
-        return userStorage.findById(userId);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ObjectNotFoundException("user with id:" + userId + " not found error"));
+        return user;
     }
 
+    @Transactional
     @Override
     public void delete(long userId) {
-        userStorage.delete(userId);
+        userRepository.deleteById(userId);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<User> getAll() {
-        return userStorage.getAll();
+        return userRepository.findAll();
     }
 }

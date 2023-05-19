@@ -6,6 +6,7 @@ import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingBriefDto;
 import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.booking.service.BookingState;
+import ru.practicum.shareit.exceptions.BadRequestException;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -31,18 +32,30 @@ public class BookingController {
 
     @GetMapping("/owner")
     public List<BookingDto> getAllByOwner(@RequestHeader(userHeaderId) Long userId,
-                                          @RequestParam(defaultValue = "ALL") BookingState state) {
-        return bookingService.getAllByOwner(userId, state);
+                                          @RequestParam(defaultValue = "ALL") BookingState state,
+                                          @RequestParam(defaultValue = "0") int from,
+                                          @RequestParam(defaultValue = "10") int size) {
+        checkSearchingParams(from, size);
+        return bookingService.getAllByOwner(userId, state, from, size);
     }
 
     @GetMapping
     public List<BookingDto> getAllByUser(@RequestHeader(userHeaderId) Long userId,
-                                         @RequestParam(defaultValue = "ALL") BookingState state) {
-        return bookingService.getAllByUser(userId, state);
+                                         @RequestParam(defaultValue = "ALL") BookingState state,
+                                         @RequestParam(defaultValue = "0") int from,
+                                         @RequestParam(defaultValue = "10") int size) {
+        checkSearchingParams(from, size);
+        return bookingService.getAllByUser(userId, state, from, size);
     }
 
     @GetMapping("/{bookingId}")
     public BookingDto getById(@PathVariable Long bookingId, @RequestHeader(userHeaderId) Long userId) {
         return bookingService.getById(bookingId, userId);
+    }
+
+    private void checkSearchingParams(int from, int size) {
+        if (from < 0 || size <= 0) {
+            throw new BadRequestException("Error - wrong searching parameters!");
+        }
     }
 }

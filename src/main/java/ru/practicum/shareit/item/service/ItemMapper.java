@@ -14,11 +14,18 @@ public class ItemMapper {
         result.setName(item.getName());
         result.setDescription(item.getDescription());
         result.setAvailable(item.getAvailable());
+        result.setRequestId(item.getRequest() != null ? item.getRequest().getId() : null);
         return result;
     }
 
     public static Item toItemModel(ItemDto itemDto, User owner) {
-        return new Item(itemDto.getId(), itemDto.getName(), itemDto.getDescription(), itemDto.getAvailable(), owner);
+        Item result = new Item();
+        result.setId(itemDto.getId());
+        result.setName(itemDto.getName());
+        result.setDescription(itemDto.getDescription());
+        result.setAvailable(itemDto.getAvailable());
+        result.setOwner(owner);
+        return result;
     }
 
     public static List<ItemDto> toItemDtoList(List<Item> items) {

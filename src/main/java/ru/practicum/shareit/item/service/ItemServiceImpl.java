@@ -2,6 +2,7 @@ package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +20,8 @@ import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.storage.CommentRepository;
 import ru.practicum.shareit.item.storage.ItemRepository;
+import ru.practicum.shareit.request.model.ItemRequest;
+import ru.practicum.shareit.request.storage.ItemRequestRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.UserRepository;
 
@@ -36,6 +39,7 @@ public class ItemServiceImpl implements ItemService {
     private final UserRepository userRepository;
     private final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;
+    private final ItemRequestRepository itemRequestRepository;
 
     @Transactional
     public ItemDto create(ItemDto itemDto, Long userId) {
@@ -43,6 +47,12 @@ public class ItemServiceImpl implements ItemService {
                 .orElseThrow(() -> new ObjectNotFoundException("user with id:" + userId + " not found error"));
 
         Item item = ItemMapper.toItemModel(itemDto, user);
+        if (itemDto.getRequestId() != null) {
+            ItemRequest itemRequest = itemRequestRepository.findById(itemDto.getRequestId())
+                    .orElseThrow(() -> new ObjectNotFoundException("request with id:" + itemDto.getRequestId() + " not found error"));
+            item.setRequest(itemRequest);
+        }
+
         return ItemMapper.toItemDto(itemRepository.save(item));
     }
 
@@ -105,15 +115,15 @@ public class ItemServiceImpl implements ItemService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<ItemDto> getAllByUserId(Long userId) {
-        List<Item> items = itemRepository.findAllByOwnerId(userId);
-        if (items.isEmpty()) {
-            return new ArrayList<>();
-        }
-
-        List<ItemDto> itemDtoList = items.stream()
+    public List<ItemDto> getAllByUserId(Long userId, int from, int size) {
+        List<ItemDto> itemDtoList = itemRepository.findAllByOwnerId(userId, PageRequest.of(from, size))
+                .stream()
                 .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());
+
+        if (itemDtoList.isEmpty()) {
+            return new ArrayList<>();
+        }
 
         for (ItemDto itemDto : itemDtoList) {
             itemDto.setComments(commentRepository.findAllByItemId(itemDto.getId())
@@ -146,7 +156,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<Item> findByRequest(String request) {
+    public List<Item> findByRequest(String request, int from, int size) {
         if (request == null || request.isBlank()) {
             return new ArrayList<>();
         }
@@ -154,10 +164,13 @@ public class ItemServiceImpl implements ItemService {
         List<Item> result = new ArrayList<>();
         request = request.toLowerCase();
 
-        for (Item item : itemRepository.findAll()) {
+        List<Item> itemsList = itemRepository.findAll(PageRequest.of(from, size))
+                .stream()
+                .collect(Collectors.toList());
+
+        for (Item item : itemsList) {
             String name = item.getName().toLowerCase();
             String description = item.getDescription().toLowerCase();
-
             if (item.getAvailable().equals(true) && (name.contains(request) || description.contains(request))) {
                 result.add(item);
             }

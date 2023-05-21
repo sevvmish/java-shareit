@@ -55,6 +55,7 @@ public class ItemControllerTest {
         inputDto.setDescription("Description");
         inputDto.setAvailable(true);
     }
+
     @Test
     @SneakyThrows
     @DisplayName("Тест эндпоинта /items на создание предмета")
@@ -109,7 +110,7 @@ public class ItemControllerTest {
     @Test
     @SneakyThrows
     @DisplayName("Тест эндпоинта /items на обновление предмета")
-    public void updateItemTest() {
+    public void updateTest() {
         inputDto.setName("new name");
         itemDto.setName("new name");
 
@@ -122,9 +123,9 @@ public class ItemControllerTest {
                         .header(userHeaderId, 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
-                        .andExpect(status().isOk())
-                        .andExpect(jsonPath("$.id", is(itemDto.getId()), Long.class))
-                        .andExpect(jsonPath("$.name", is(itemDto.getName()), String.class));
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(itemDto.getId()), Long.class))
+                .andExpect(jsonPath("$.name", is(itemDto.getName()), String.class));
 
         verify(itemService, times(1))
                 .update(any(ItemDto.class), any(Long.class), any(Long.class));
@@ -133,14 +134,14 @@ public class ItemControllerTest {
     @Test
     @SneakyThrows
     @DisplayName("Тест эндпоинта /items на получение предмета по ИД")
-    public void findItemByIdTest() {
+    public void findByIdTest() {
         when(itemService.findById(any(Long.class), any(Long.class)))
                 .thenReturn(itemDto);
 
         mvc.perform(get("/items/1")
                         .header(userHeaderId, 1))
-                        .andExpect(status().isOk())
-                        .andExpect(jsonPath("$.id", is(itemDto.getId()), Long.class));
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(itemDto.getId()), Long.class));
 
         verify(itemService, times(1)).findById(any(Long.class), any(Long.class));
     }
@@ -148,7 +149,7 @@ public class ItemControllerTest {
     @Test
     @SneakyThrows
     @DisplayName("Тест эндпоинта /items на получение предметов по ИД юзера")
-    public void findAllItemsTest() {
+    public void getAllTest() {
         when(itemService.getAllByUserId(any(Long.class), any(Integer.class), any(Integer.class)))
                 .thenReturn(new ArrayList<>());
 
@@ -156,8 +157,8 @@ public class ItemControllerTest {
                         .header(userHeaderId, 1)
                         .param("from", "0")
                         .param("size", "10"))
-                        .andExpect(status().isOk())
-                        .andExpect(content().json("[]"));
+                .andExpect(status().isOk())
+                .andExpect(content().json("[]"));
 
         verify(itemService, times(1))
                 .getAllByUserId(any(Long.class), any(Integer.class), any(Integer.class));
@@ -166,7 +167,7 @@ public class ItemControllerTest {
     @Test
     @SneakyThrows
     @DisplayName("Тест эндпоинта /items на получение предметов по поисковому запросу")
-    public void findItemsByRequestTest() throws Exception {
+    public void findByRequestTest() throws Exception {
         when(itemService.findByRequest(any(String.class), any(Integer.class), any(Integer.class)))
                 .thenReturn(new ArrayList<>());
 
@@ -175,8 +176,8 @@ public class ItemControllerTest {
                         .param("text", "any text")
                         .param("from", "0")
                         .param("size", "10"))
-                        .andExpect(status().isOk())
-                        .andExpect(content().json("[]"));
+                .andExpect(status().isOk())
+                .andExpect(content().json("[]"));
 
         verify(itemService, times(1))
                 .findByRequest(any(String.class), any(Integer.class), any(Integer.class));

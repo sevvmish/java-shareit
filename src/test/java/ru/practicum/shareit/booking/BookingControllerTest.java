@@ -73,8 +73,8 @@ public class BookingControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(bookingDto.getId()),  Long.class))
-                .andExpect(jsonPath("$.item", is(bookingDto.getItem()),  Item.class));
+                .andExpect(jsonPath("$.id", is(bookingDto.getId()), Long.class))
+                .andExpect(jsonPath("$.item", is(bookingDto.getItem()), Item.class));
 
         verify(bookingService, times(1))
                 .create(any(BookingBriefDto.class), any(Long.class));
@@ -143,8 +143,8 @@ public class BookingControllerTest {
                         .header(userHeaderId, 1)
                         .param("from", "0")
                         .param("size", "10"))
-                        .andExpect(status().isOk())
-                        .andExpect(content().json("[]"));
+                .andExpect(status().isOk())
+                .andExpect(content().json("[]"));
 
         verify(bookingService, times(1))
                 .getAllByOwner(any(Long.class), any(BookingState.class), any(Integer.class), any(Integer.class));

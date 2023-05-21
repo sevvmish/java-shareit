@@ -75,7 +75,7 @@ public class ItemRequestControllerTest {
     @Test
     @SneakyThrows
     @DisplayName("Тест эндпоинта /requests на получение всех реквестов по ИД юзера")
-    public void getAllByUserIdTest(){
+    public void getAllByUserIdTest() {
         when(itemRequestService.getAllByUser(any(Long.class)))
                 .thenReturn(Collections.emptyList());
 

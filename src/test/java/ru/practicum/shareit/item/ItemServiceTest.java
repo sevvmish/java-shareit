@@ -233,8 +233,7 @@ public class ItemServiceTest {
                 .thenReturn(Optional.ofNullable(user));
 
         when(bookingRepository
-                .findAllByBookerIdAndItemIdAndStatusEqualsAndEndIsBefore
-                        (any(Long.class), any(Long.class), any(BookingStatus.class), any(LocalDateTime.class)))
+                .findAllByBookerIdAndItemIdAndStatusEqualsAndEndIsBefore(any(Long.class), any(Long.class), any(BookingStatus.class), any(LocalDateTime.class)))
                 .thenReturn(Collections.emptyList());
 
         BadRequestException result = assertThrows(BadRequestException.class, () -> {

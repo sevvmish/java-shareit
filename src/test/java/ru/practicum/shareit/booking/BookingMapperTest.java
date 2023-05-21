@@ -44,7 +44,7 @@ public class BookingMapperTest {
 
     @Test
     @DisplayName("Тест на перевод букинга в специальный короткий объект букинга")
-    public void BookingBriefDtoTest() {
+    public void bookingBriefDtoTest() {
         BookingBriefDto dto = BookingMapper.toBookingBriefDto(booking);
 
         assertEquals(dto.getId(), booking.getId());

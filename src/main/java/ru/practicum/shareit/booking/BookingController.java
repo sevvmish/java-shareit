@@ -1,17 +1,20 @@
 package ru.practicum.shareit.booking;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingBriefDto;
 import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.booking.service.BookingState;
-import ru.practicum.shareit.exceptions.BadRequestException;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @RestController
+@Validated
 @RequestMapping(path = "/bookings")
 @RequiredArgsConstructor
 public class BookingController {
@@ -33,29 +36,21 @@ public class BookingController {
     @GetMapping("/owner")
     public List<BookingDto> getAllByOwner(@RequestHeader(userHeaderId) Long userId,
                                           @RequestParam(defaultValue = "ALL") BookingState state,
-                                          @RequestParam(defaultValue = "0") int from,
-                                          @RequestParam(defaultValue = "10") int size) {
-        checkSearchingParams(from, size);
+                                          @RequestParam(defaultValue = "0") @PositiveOrZero int from,
+                                          @RequestParam(defaultValue = "10") @Positive int size) {
         return bookingService.getAllByOwner(userId, state, from, size);
     }
 
     @GetMapping
     public List<BookingDto> getAllByUser(@RequestHeader(userHeaderId) Long userId,
                                          @RequestParam(defaultValue = "ALL") BookingState state,
-                                         @RequestParam(defaultValue = "0") int from,
-                                         @RequestParam(defaultValue = "10") int size) {
-        checkSearchingParams(from, size);
+                                         @RequestParam(defaultValue = "0") @PositiveOrZero int from,
+                                         @RequestParam(defaultValue = "10") @Positive int size) {
         return bookingService.getAllByUser(userId, state, from, size);
     }
 
     @GetMapping("/{bookingId}")
     public BookingDto getById(@PathVariable Long bookingId, @RequestHeader(userHeaderId) Long userId) {
         return bookingService.getById(bookingId, userId);
-    }
-
-    private void checkSearchingParams(int from, int size) {
-        if (from < 0 || size <= 0) {
-            throw new BadRequestException("Error - wrong searching parameters!");
-        }
     }
 }

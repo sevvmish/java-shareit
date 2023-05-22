@@ -1,15 +1,18 @@
 package ru.practicum.shareit.request;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.exceptions.BadRequestException;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.service.ItemRequestService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @RestController
+@Validated
 @RequestMapping(path = "/requests")
 @RequiredArgsConstructor
 public class ItemRequestController {
@@ -28,12 +31,9 @@ public class ItemRequestController {
     }
 
     @GetMapping("/all")
-    public List<ItemRequestDto> getAll(@RequestParam(defaultValue = "0") int from,
-                                       @RequestParam(defaultValue = "10") int size,
+    public List<ItemRequestDto> getAll(@RequestParam(defaultValue = "0") @PositiveOrZero int from,
+                                       @RequestParam(defaultValue = "10") @Positive int size,
                                        @RequestHeader(userHeaderId) Long userId) {
-        if (from < 0 || size <= 0) {
-            throw new BadRequestException("Error - wrong searching parameters!");
-        }
         return itemRequestService.getAll(from, size, userId);
     }
 

@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -10,9 +11,12 @@ import ru.practicum.shareit.item.service.ItemService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @RestController
+@Validated
 @RequestMapping("/items")
 @RequiredArgsConstructor
 public class ItemController {
@@ -39,13 +43,17 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<ItemDto> getAllByUserId(@NotNull @RequestHeader(userHeaderId) Long userId) {
-        return itemService.getAllByUserId(userId);
+    public List<ItemDto> getAllByUserId(@NotNull @RequestHeader(userHeaderId) Long userId,
+                                        @RequestParam(defaultValue = "0") @PositiveOrZero int from,
+                                        @RequestParam(defaultValue = "10") @Positive int size) {
+        return itemService.getAllByUserId(userId, from, size);
     }
 
     @GetMapping("/search")
-    public List<ItemDto> findByRequest(@RequestParam String text) {
-        List<Item> foundItems = itemService.findByRequest(text);
+    public List<ItemDto> findByRequest(@RequestParam String text,
+                                       @RequestParam(defaultValue = "0") @PositiveOrZero int from,
+                                       @RequestParam(defaultValue = "10") @Positive int size) {
+        List<Item> foundItems = itemService.findByRequest(text, from, size);
         return ItemMapper.toItemDtoList(foundItems);
     }
 

@@ -36,7 +36,7 @@ public class ExceptionsHandler {
         if (e.getMessage().contains("UNSUPPORTED_STATUS"))
             return new ErrorResponse("Unknown state: UNSUPPORTED_STATUS");
         return new ErrorResponse(
-                String.format(e.getMessage() + "2222")
+                String.format(e.getMessage())
         );
     }
 

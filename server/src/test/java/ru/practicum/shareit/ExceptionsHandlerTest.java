@@ -4,8 +4,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.practicum.shareit.exceptions.*;
 
-import javax.validation.ValidationException;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -17,15 +15,6 @@ public class ExceptionsHandlerTest {
     public void objectNotFoundExceptionTest() {
         ObjectNotFoundException e = new ObjectNotFoundException("object not found");
         ErrorResponse errorResponse = handler.objectNotFoundException(e);
-        assertNotNull(errorResponse);
-        assertEquals(errorResponse.getError(), e.getMessage());
-    }
-
-    @Test
-    @DisplayName("Тест ошибки валидации")
-    public void validationExceptionTest() {
-        ValidationException e = new ValidationException("validation error");
-        ErrorResponse errorResponse = handler.validationException(e);
         assertNotNull(errorResponse);
         assertEquals(errorResponse.getError(), e.getMessage());
     }

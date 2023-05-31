@@ -7,8 +7,6 @@ import ru.practicum.shareit.user.model.UserDto;
 import ru.practicum.shareit.user.service.UserMapper;
 import ru.practicum.shareit.user.service.UserService;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @RestController
@@ -18,13 +16,13 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public UserDto create(@Valid @RequestBody UserDto userDto) {
+    public UserDto create(@RequestBody UserDto userDto) {
         User user = UserMapper.toUserModel(userDto);
         return UserMapper.toUserDto(userService.create(user));
     }
 
     @GetMapping("/{userId}")
-    public UserDto findById(@NotNull @PathVariable Long userId) {
+    public UserDto findById(@PathVariable Long userId) {
         return UserMapper.toUserDto(userService.findById(userId));
     }
 
@@ -34,13 +32,13 @@ public class UserController {
     }
 
     @PatchMapping("/{userId}")
-    public UserDto update(@NotNull @PathVariable Long userId,
+    public UserDto update(@PathVariable Long userId,
                           @RequestBody UserDto userDto) {
         return UserMapper.toUserDto(userService.update(userId, userDto));
     }
 
     @DeleteMapping("/{userId}")
-    public void delete(@NotNull @PathVariable Long userId) {
+    public void delete(@PathVariable Long userId) {
         userService.delete(userId);
     }
 }
